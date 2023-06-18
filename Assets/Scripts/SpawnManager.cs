@@ -16,13 +16,13 @@ public class SpawnManager : MonoBehaviour
 
     void Update()
     {
-        enemyCount = FindObjectsOfType<Enemy>().Length;
-        if (enemyCount == 0)
-        {
-            waveNumber++;
-            SpawnEnemyWave(waveNumber);
-            SpawnPowerup();
-        }
+        // enemyCount = FindObjectsOfType<Enemy>().Length;
+        // if (enemyCount == 0)
+        // {
+        //     waveNumber++;
+        //     SpawnEnemyWave(waveNumber);
+        //     SpawnPowerup();
+        // }
     }
 
     /// challenge: spawn specified numberOfEnemies using Instantiate(...)
@@ -30,7 +30,7 @@ public class SpawnManager : MonoBehaviour
     {
         for (int i = 0; i < numberOfEnemies; i++)
         {
-            Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
+            // Instantiate(, GenerateSpawnPosition(), );
         }
     }
 

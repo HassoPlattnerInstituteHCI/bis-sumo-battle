@@ -52,12 +52,12 @@ public class PlayerController : MonoBehaviour
         GameObject other = collision.gameObject;
         /// challenge: when collision has tag "Enemy" and we have a powerup
         /// get the enemyRigidbody and push the enemy away from the player
-        if (other.CompareTag("Enemy") && hasPowerup)
-        {
-            Rigidbody enemyRigidbody = other.GetComponent<Rigidbody>();
-            Vector3 awayFromPlayer = other.transform.position - transform.position;
-            enemyRigidbody.AddForce(awayFromPlayer.normalized * powerupStrength, ForceMode.Impulse);
-        }
+        // if ()
+        // {
+        //     Rigidbody enemyRigidbody = 
+        //     Vector3 awayFromPlayer = 
+        //     enemyRigidbody.AddForce(, ForceMode.Impulse);
+        // }
     }
 
     void PowerupCountdown()
