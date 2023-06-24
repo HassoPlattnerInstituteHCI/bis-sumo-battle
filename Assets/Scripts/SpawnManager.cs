@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 public class SpawnManager : MonoBehaviour
 {
     public GameObject enemyPrefab;
-    private float spawnRange = 9f;
     public GameObject powerupPrefab;
     public int waveNumber = 0;  
-    private int enemyCount;
     public bool gameStarted = false;
+    public bool playIntro = false;
+    private int enemyCount;
     private SpeechOut speechOut;
+    private float spawnRange = 9f;
 
     void Start()
     {
@@ -20,8 +21,11 @@ public class SpawnManager : MonoBehaviour
     }
 
     async void StartGame() {
-        Level room = GameObject.Find("Panto").GetComponent<Level>();
-        await room.PlayIntroduction();
+        if (playIntro) 
+        {
+            Level room = GameObject.Find("Panto").GetComponent<Level>();
+            await room.PlayIntroduction();
+        }
         await GameObject.FindObjectOfType<PlayerController>().ActivatePlayer();
         await SpawnPowerup();
         gameStarted = true;
@@ -70,20 +74,18 @@ public class SpawnManager : MonoBehaviour
         Vector3 randomPos = new Vector3(randomPosX, 0, randomPosZ);
         return randomPos;
     }
-    async public void FindOtherEnemy() {
-        GameObject closestEnemy = GetClosestGameObject("Enemy", GameObject.Find("Player").transform.position);
-        if (closestEnemy != null)
-            await GameObject.Find("Panto").GetComponent<LowerHandle>().SwitchTo(closestEnemy);
-    }
 
-    GameObject GetClosestGameObject(string tag, Vector3 position) {
+
+    public GameObject GetClosestGameObject(string tag, Vector3 position) 
+    {
         GameObject[] gos = GameObject.FindGameObjectsWithTag(tag);
-        GameObject closest = null;
 
+        GameObject closest = null;
         float distance = Mathf.Infinity;
 
-        foreach(GameObject go in gos) {
+        foreach (GameObject go in gos) {
             float currentDistance = Vector3.Distance(go.transform.position, position);
+
             if (currentDistance < distance)
             {
                 closest = go;
@@ -91,6 +93,15 @@ public class SpawnManager : MonoBehaviour
             }
         }
         return closest;
+    }
+    async public void FindOtherEnemy()
+    {
+        Vector3 playerPosition = GameObject.Find("Player").transform.position;
+
+        GameObject closestEnemy = GetClosestGameObject("Enemy", playerPosition);
+        if (closestEnemy != null)
+            await GameObject.Find("Panto").GetComponent<LowerHandle>().SwitchTo(closestEnemy);
+
     }
 
     async Task SpawnPowerup()

@@ -10,23 +10,38 @@ using System.Threading.Tasks;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody playerRb;
-    public float speed = 10f;
+    public float speed = 5f;
     public GameObject focalPoint;
     public bool hasPowerup;
-    private float powerupStrength = 15f;
+    private float powerupStrength = 30f;
     public int powerupTime = 7;
     public GameObject powerupIndicator;
     private SpeechIn speech;
     private SpeechOut speechOut;
     private bool movementFrozen;
+    private UpperHandle upperHandle;
 
-    void Start()
+    async void Start()
     {
         playerRb = GetComponent<Rigidbody>();
-        //ActivatePlayer();
+        //await ActivatePlayer();
         speech = new SpeechIn(onSpeechRecognized);
         speech.StartListening(new string[]{"help", "resume"});
         speechOut = new SpeechOut();
+    }
+    void FixedUpdate()
+    {
+        if (!GameObject.FindObjectOfType<SpawnManager>().gameStarted) return;
+        //float forwardInput = Input.GetAxis("Vertical");
+        //playerRb.AddForce(focalPoint.transform.forward * forwardInput * speed);
+        PantoMovement();
+    }
+
+    void PantoMovement()
+    {
+        float rotation = upperHandle.GetRotation();
+        transform.eulerAngles = new Vector3(0, rotation, 0);
+        playerRb.velocity = speed * transform.forward;
     }
 
     async void onSpeechRecognized(string command) {
@@ -63,31 +78,15 @@ public class PlayerController : MonoBehaviour
 
     public async Task ActivatePlayer()
     {
-        UpperHandle upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
+        upperHandle = GameObject.Find("Panto").GetComponent<UpperHandle>();
         await upperHandle.SwitchTo(gameObject);
-        upperHandle.FreeRotation(); 
+        upperHandle.FreeRotation();
     }
 
     void Update()
     {
         if(!GameObject.FindObjectOfType<SpawnManager>().gameStarted) return;
         powerupIndicator.transform.position = transform.position + new Vector3(0f, -0.5f, 0f);
-    }
-
-    void FixedUpdate()
-    {
-        if(!GameObject.FindObjectOfType<SpawnManager>().gameStarted) return;
-        //float forwardInput = Input.GetAxis("Vertical");
-        //playerRb.AddForce(focalPoint.transform.forward * forwardInput * speed);
-        PantoMovement();
-    }
-
-    void PantoMovement()
-    {
-        UpperHandle upperHandle =  GameObject.Find("Panto").GetComponent<UpperHandle>();
-        float rotation = upperHandle.GetRotation();
-        transform.eulerAngles = new Vector3(0, rotation, 0);
-        playerRb.velocity = speed * transform.forward;
     }
 
     async void OnTriggerEnter(Collider other)
@@ -109,11 +108,16 @@ public class PlayerController : MonoBehaviour
         GameObject other = collision.gameObject;
         /// challenge: when collision has tag "Enemy" and we have a powerup
         /// get the enemyRigidbody and push the enemy away from the player
-        if (other.CompareTag("Enemy") && hasPowerup)
+        if (other.CompareTag("Enemy"))
         {
             Rigidbody enemyRigidbody = other.GetComponent<Rigidbody>();
             Vector3 awayFromPlayer = other.transform.position - transform.position;
-            enemyRigidbody.AddForce(awayFromPlayer.normalized * powerupStrength, ForceMode.Impulse);
+            Vector3 scaledDirection = awayFromPlayer.normalized * powerupStrength * 0.4f;
+            if (hasPowerup)
+            {
+                scaledDirection = awayFromPlayer.normalized * powerupStrength;
+            }
+            enemyRigidbody.AddForce(scaledDirection, ForceMode.Impulse);
         }
     }
 
