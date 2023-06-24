@@ -85,12 +85,14 @@ public class SpawnManager : MonoBehaviour
 
         foreach (GameObject go in gos) {
             float currentDistance = Vector3.Distance(go.transform.position, position);
-
-            if (currentDistance < distance)
-            {
-                closest = go;
-                distance = currentDistance;
-            }
+            /* 
+             * TODO1: find closest game object 
+             */ 
+            // if (???)
+            // {
+            //    closest = ???
+            //    distance = ???
+            // }
         }
         return closest;
     }
@@ -98,10 +100,13 @@ public class SpawnManager : MonoBehaviour
     {
         Vector3 playerPosition = GameObject.Find("Player").transform.position;
 
-        GameObject closestEnemy = GetClosestGameObject("Enemy", playerPosition);
-        if (closestEnemy != null)
-            await GameObject.Find("Panto").GetComponent<LowerHandle>().SwitchTo(closestEnemy);
+        /*
+         * TODO2: Make the it-handle track the closest enemy
+         */
 
+        // GameObject closestEnemy = ???
+        // if (closestEnemy != null)
+        //    await GameObject.Find("Panto").GetComponent<LowerHandle>().???(???);
     }
 
     async Task SpawnPowerup()
