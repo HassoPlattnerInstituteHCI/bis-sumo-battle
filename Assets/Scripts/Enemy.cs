@@ -14,11 +14,13 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if (transform.position.y < -10)
+        if (transform.position.y < -2)
         {
+            GameObject.FindObjectOfType<SpawnManager>().FindOtherEnemy();
             Destroy(gameObject);
         }
     }
+
 
     void FixedUpdate()
     {

@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Powerup
+  - ItTrail
+  - MeTrail
+  - MeHandle
   layers:
   - Default
   - TransparentFX
@@ -15,8 +19,8 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - BlindMode
+  - MixedMode
   - 
   - 
   - 
