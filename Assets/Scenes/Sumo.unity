@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.43667564, g: 0.48427135, b: 0.5645232, a: 1}
+  m_IndirectSpecularColor: {r: 0.4366753, g: 0.48427093, b: 0.5645238, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 245847507}
   - component: {fileID: 245847506}
   - component: {fileID: 245847511}
+  - component: {fileID: 245847512}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -255,6 +256,22 @@ MonoBehaviour:
   hasPowerup: 0
   powerupTime: 7
   powerupIndicator: {fileID: 558255853}
+--- !u!114 &245847512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245847505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7948ea43f9f03c647aa1ec214c4fbde9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  traceShape: 0
+  isOnUpper: 0
+  description: You
+  priority: 1
 --- !u!1001 &245963551
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -917,6 +934,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 89157494781552761, guid: ff520691faef445279642e905f49f7ad,
         type: 3}
+      propertyPath: playIntro
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 89157494781552761, guid: ff520691faef445279642e905f49f7ad,
+        type: 3}
       propertyPath: enemyPrefab
       value: 
       objectReference: {fileID: 8909845515648518014, guid: 111c8ec06ec7c3640b95aed4270223d1,
@@ -1072,7 +1094,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   traceShape: 1
   isOnUpper: 0
-  description: 'You are on a six sided island, don''t let the enemy push you off. '
+  description: 'are on a six sided island, don''t let the enemy push you off. '
   priority: 0
 --- !u!850595691 &1716551658
 LightingSettings:

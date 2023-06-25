@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviour
             CancelInvoke("PowerupCountdown"); // if we previously picked up an powerup
             Invoke("PowerupCountdown", powerupTime);
             await speechOut.Speak("You got the power up");
-            GameObject.FindObjectOfType<SpawnManager>().SpawnEnemyWave();
+            // GameObject.FindObjectOfType<SpawnManager>().SpawnEnemyWave();
         }
     }
 
@@ -129,5 +129,6 @@ public class PlayerController : MonoBehaviour
 
     void OnApplicationQuit() {
         speechOut.Stop();
+        speech.StopListening();
     }
 }

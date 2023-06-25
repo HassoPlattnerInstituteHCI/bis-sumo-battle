@@ -16,8 +16,20 @@ public class SpawnManager : MonoBehaviour
 
     void Start()
     {
-        StartGame();
+        // StartGame();
+        StartGameWithOutIntro();
         speechOut = new SpeechOut();
+    }
+
+    async void StartGameWithOutIntro()
+    {
+        GameObject powerup = Instantiate(powerupPrefab, GenerateSpawnPosition(), powerupPrefab.transform.rotation);
+        await GameObject.Find("Panto").GetComponent<LowerHandle>().SwitchTo(powerup);
+        GameObject enemy = Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
+        await GameObject.Find("Panto").GetComponent<LowerHandle>().SwitchTo(enemy);
+        GameObject.FindObjectOfType<Enemy>().ActivateEnemy();
+        GameObject.FindObjectOfType<PlayerController>().ActivatePlayer();
+        gameStarted = true;
     }
 
     async void StartGame() {
@@ -26,10 +38,14 @@ public class SpawnManager : MonoBehaviour
             Level room = GameObject.Find("Panto").GetComponent<Level>();
             await room.PlayIntroduction();
         }
-        await GameObject.FindObjectOfType<PlayerController>().ActivatePlayer();
         await SpawnPowerup();
+        await SpawnEnemy();
+
+        await GameObject.FindObjectOfType<PlayerController>().ActivatePlayer();
+        await GameObject.FindObjectOfType<Enemy>().ActivateEnemy();
         gameStarted = true;
     }
+    
 
     void OnApplicationQuit()
     {
@@ -57,15 +73,16 @@ public class SpawnManager : MonoBehaviour
             if (i == 0)
             {
                 await GameObject.Find("Panto").GetComponent<LowerHandle>().SwitchTo(enemy);
+                GameObject.FindObjectOfType<Enemy>().ActivateEnemy();
             }
         }
     }
 
-    public async void SpawnEnemyWave() {
-        await speechOut.Speak("Spawning " + waveNumber + " enemies");
-        SpawnEnemyWave(waveNumber);
-        waveNumber++;
-    }
+    // public async void SpawnEnemyWave() {
+    //     await speechOut.Speak("Spawning " + waveNumber + " enemies");
+    //     SpawnEnemyWave(waveNumber);
+    //     waveNumber++;
+    // }
 
     private Vector3 GenerateSpawnPosition()
     {
@@ -114,5 +131,14 @@ public class SpawnManager : MonoBehaviour
         GameObject powerup = Instantiate(powerupPrefab, GenerateSpawnPosition(), powerupPrefab.transform.rotation);
         await GameObject.Find("Panto").GetComponent<LowerHandle>().SwitchTo(powerup);
         await speechOut.Speak("Here is the power up");
+    }
+
+    async Task SpawnEnemy()
+    {
+        GameObject enemy = Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
+        await GameObject.Find("Panto").GetComponent<LowerHandle>().SwitchTo(enemy);
+        await speechOut.Speak("Here is Enemy");
+        GameObject.FindObjectOfType<Enemy>().ActivateEnemy();
+        waveNumber++;
     }
 }
