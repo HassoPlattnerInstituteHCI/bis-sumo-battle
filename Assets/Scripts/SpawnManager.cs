@@ -16,8 +16,8 @@ public class SpawnManager : MonoBehaviour
 
     void Start()
     {
-        // StartGame();
-        StartGameWithOutIntro();
+         StartGame();
+        //StartGameWithOutIntro();
         speechOut = new SpeechOut();
     }
 
@@ -102,14 +102,12 @@ public class SpawnManager : MonoBehaviour
 
         foreach (GameObject go in gos) {
             float currentDistance = Vector3.Distance(go.transform.position, position);
-            /* 
-             * TODO1: find closest game object 
-             */ 
-            // if (???)
-            // {
-            //    closest = ???
-            //    distance = ???
-            // }
+     
+            if (currentDistance < distance)
+            {
+                closest = go;
+                distance = currentDistance;
+            }
         }
         return closest;
     }
@@ -121,9 +119,9 @@ public class SpawnManager : MonoBehaviour
          * TODO2: Make the it-handle track the closest enemy
          */
 
-        // GameObject closestEnemy = ???
-        // if (closestEnemy != null)
-        //    await GameObject.Find("Panto").GetComponent<LowerHandle>().???(???);
+        GameObject closestEnemy = GetClosestGameObject("Enemy", playerPosition);
+        if (closestEnemy != null)
+            await GameObject.Find("Panto").GetComponent<LowerHandle>().SwitchTo(closestEnemy);
     }
 
     async Task SpawnPowerup()
