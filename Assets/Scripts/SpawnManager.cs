@@ -131,14 +131,14 @@ public class SpawnManager : MonoBehaviour
     {
         GameObject powerup = Instantiate(powerupPrefab, GenerateSpawnPosition(), powerupPrefab.transform.rotation);
         await GameObject.Find("Panto").GetComponent<LowerHandle>().SwitchTo(powerup);
-        await speechOut.Speak("Here is the power up");
+        // await speechOut.Speak("Here is the power up");
     }
 
     async Task SpawnEnemy()
     {
         GameObject enemy = Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
         await GameObject.Find("Panto").GetComponent<LowerHandle>().SwitchTo(enemy);
-        await speechOut.Speak("Here is Enemy");
+        // await speechOut.Speak("Here is Enemy");
         GameObject.FindObjectOfType<Enemy>().ActivateEnemy();
         waveNumber++;
     }

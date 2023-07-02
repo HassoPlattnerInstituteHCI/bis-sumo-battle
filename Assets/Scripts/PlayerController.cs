@@ -16,37 +16,77 @@ public class PlayerController : MonoBehaviour
     private float powerupStrength = 30f;
     public int powerupTime = 7;
     public GameObject powerupIndicator;
-    private SpeechIn speech;
+    private SpeechIn speechIn;
     private SpeechOut speechOut;
     private bool movementFrozen;
     private UpperHandle upperHandle;
     
     private PlayerSoundEffect soundEffects;
     private bool playerFellDown;
+    
+    private int powerupAmmo = 2;
+    public float explosionRadius = 10f;
+    public float explosionPower = 2000f;
+    public float explosionUpwardForce = 5f;
+    public LayerMask explosionAffected;
 
     async void Start()
     {
         playerRb = GetComponent<Rigidbody>();
         //await ActivatePlayer();
-        speech = new SpeechIn(onSpeechRecognized);
-        speech.StartListening(new string[]{"help", "resume"});
+        speechIn = new SpeechIn(onRecognized);
+        speechIn.StartListening(new string[]{"help", "resume"});
         speechOut = new SpeechOut();
-
-        soundEffects = GetComponent<PlayerSoundEffect>();
+        
+        // BIS TODO: uncomment
+        // soundEffects = GetComponent<PlayerSoundEffect>();
+        
+        // BIS TODO: uncomment
+        // PowerUpListener();
     }
     
     void Update()
     {
-        
-        if (transform.position.x*transform.position.x + transform.position.z*transform.position.z > 14.5*14.5f && !playerFellDown)
-        {
-            playerFellDown = true;
-            float clipTime = soundEffects.PlayerFellDown();
-            Destroy(gameObject, clipTime);
-        }
+        // BIS TODO: uncomment
+        // if (transform.position.x*transform.position.x + transform.position.z*transform.position.z > 14.5*14.5f && !playerFellDown)
+        // {
+        //     playerFellDown = true;
+        //     float clipTime = soundEffects.PlayerFellDown();
+        //     Destroy(gameObject, clipTime);
+        // }
 
         if(!GameObject.FindObjectOfType<SpawnManager>().gameStarted) return;
         powerupIndicator.transform.position = transform.position + new Vector3(0f, -0.5f, 0f);
+        
+        if (Input.GetKeyDown (KeyCode.Space))
+        {
+            ExplosionPowerup();
+        }
+        if (Input.GetButtonDown("Cancel"))
+            speechIn.StopListening();
+    }
+    
+    async void PowerUpListener()
+    {
+        string powerup = await speechIn.Listen(new string[] { "boom", "jump", "hide" });
+        switch (powerup)
+        {
+            case "boom":
+                if (powerupAmmo <= 0)
+                {
+                    await soundEffects.speechOut.Speak("no ammo for:" + powerup);
+                    return;
+                }
+                ExplosionPowerup();
+                break;
+            case "jump":
+                //JumpPowerup();
+                break;
+            case "hide":
+                //HidePowerup();
+                break;
+        }
+        PowerUpListener();
     }
     
     void FixedUpdate()
@@ -123,15 +163,14 @@ public class PlayerController : MonoBehaviour
     {
         GameObject other = collision.gameObject;
         
-        
-        /// challenge: when collision has tag "Enemy" and we have a powerup
-        /// get the enemyRigidbody and push the enemy away from the player
         if (other.CompareTag("Enemy"))
         {
-            soundEffects.PlayHit();
+            // BIS TODO: uncomment
+            // soundEffects.PlayHit();
             
-            Enemy enemy = other.GetComponent<Enemy>();
-            soundEffects.PlayEnemyHitClip(enemy.nameClip, other);
+            // BIS TODO: uncomment
+            // Enemy enemy = other.GetComponent<Enemy>();
+            // soundEffects.PlayEnemyHitClip(enemy.nameClip, other);
  
             Rigidbody enemyRigidbody = other.GetComponent<Rigidbody>();
             Vector3 awayFromPlayer = other.transform.position - transform.position;
@@ -143,15 +182,53 @@ public class PlayerController : MonoBehaviour
             enemyRigidbody.AddForce(scaledDirection, ForceMode.Impulse);
         }
     }
+    
+    public void ExplosionPowerup()
+    {
+        powerupAmmo--;
+        Vector3 explosionPos = transform.position;
+        Collider[] colliders = Physics.OverlapSphere(explosionPos, explosionRadius, explosionAffected);
+        foreach (Collider hit in colliders)
+        {
+            Rigidbody rb = hit.GetComponent<Rigidbody>();
+            if (rb != null)
+                rb.AddExplosionForce(explosionPower, explosionPos, explosionRadius, explosionUpwardForce);
+        }
+    }
 
     void PowerupCountdown()
     {
         hasPowerup = false;
         powerupIndicator.gameObject.SetActive(false);
     }
+    
+    void onRecognized(string message)
+    {
+        Debug.Log("recognized " + message);
+        // switch (message)
+        // {
+        //     case "repeat":
+        //         await soundEffects.speechOut.Repeat();
+        //         break;
+        //     case "quit":
+        //         await soundEffects.speechOut.Speak("Thanks for using our application. Closing down now");
+        //         OnApplicationQuit();
+        //         Application.Quit();
+        //         break;
+        //     case "options":
+        //         string commandlist = "";
+        //         foreach (string command in speechIn.GetActiveCommands())
+        //         {
+        //             commandlist += command + ", ";
+        //         }
+        //         await soundEffects.speechOut.Speak("currently available commands: " + 												commandlist);
+        //         break;
+        // }
+
+    }
 
     void OnApplicationQuit() {
         speechOut.Stop();
-        speech.StopListening();
+        speechIn.StopListening();
     }
 }

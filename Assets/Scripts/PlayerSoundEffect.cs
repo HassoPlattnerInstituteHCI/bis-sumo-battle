@@ -13,7 +13,7 @@ public class PlayerSoundEffect : MonoBehaviour
 
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        // audioSource = GetComponent<AudioSource>();
         // speechOut = new SpeechOut();
     }
     public float PlayerFellDown()
@@ -43,36 +43,34 @@ public class PlayerSoundEffect : MonoBehaviour
             previousEnemy = go;
         }
         audioSource.PlayOneShot(clip);
-    }
+        
+        // BIS TODO: uncomment
+        // previousEnemy = go;
+        // audioSource.clip = clip;
+        // audioSource.Play();
+        
+        // BIS TODO: uncomment
+        // Enemy enemy = go.GetComponent<Enemy>(); 
+        // speechOut.Speak("I was hit by: " + enemy.displayName);
 
 
-    public void PlayEnemyHitClip(GameObject go = null)
-    {
-        if (go)
-        {
-            if (previousEnemy)
-            {
-                if (go.Equals(previousEnemy))
-                    return;
-            }
-            previousEnemy = go;
-        }
-        SayName(go.GetComponent<Enemy>());
     }
+
+    // BIS TODO: uncomment
+    // public void PlayEnemyHitClip(GameObject go = null)
+    // {
+    //     if (go)
+    //     {
+    //         if (previousEnemy)
+    //         {
+    //             if (go.Equals(previousEnemy))
+    //                 return;
+    //         }
+    //         previousEnemy = go;
+    //     }
+    //     SayName(go.GetComponent<Enemy>());
+    // }
     
-    private async void SayName(Enemy e)
-    {
-        speechOut.Stop();
-        if (e.displayName == "Shohei")
-        {
-            await speechOut.Speak("Enemy hit me"); 
-        }
-        else
-        {
-            await speechOut.Speak(e.displayName + " hit me");
-        }
-    }
-
     public void StopPlayback()
     {
         audioSource.Stop();
@@ -85,6 +83,10 @@ public class PlayerSoundEffect : MonoBehaviour
         // plays same clip only once, this way no overlapping
         audioSource.PlayOneShot(clip);
         audioSource.pitch = 1f;
+    }
+    
+    void OnApplicationQuit() {
+        speechOut.Stop();
     }
 
 }

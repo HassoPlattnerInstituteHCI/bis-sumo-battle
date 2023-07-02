@@ -258,6 +258,12 @@ MonoBehaviour:
   hasPowerup: 0
   powerupTime: 7
   powerupIndicator: {fileID: 558255853}
+  explosionRadius: 10
+  explosionPower: 2000
+  explosionUpwardForce: 5
+  explosionAffected:
+    serializedVersion: 2
+    m_Bits: 2147483647
 --- !u!114 &245847512
 MonoBehaviour:
   m_ObjectHideFlags: 0
