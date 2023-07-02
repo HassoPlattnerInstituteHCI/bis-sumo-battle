@@ -7,6 +7,10 @@ public class Enemy : MonoBehaviour
     private Rigidbody enemyRb;
     private GameObject player;
     private bool enemyActive = false;
+    
+    public string displayName;
+    public AudioClip nameClip;
+
 
     void Start()
     {

@@ -13,6 +13,8 @@ public class SpawnManager : MonoBehaviour
     private int enemyCount;
     private SpeechOut speechOut;
     private float spawnRange = 9f;
+    
+    public string[] nameList;
 
     void Start()
     {
@@ -70,6 +72,7 @@ public class SpawnManager : MonoBehaviour
         for (int i = 0; i < numberOfEnemies; i++)
         {
             GameObject enemy = Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
+            enemy.GetComponent<Enemy>().displayName = nameList[i % nameList.Length];
             if (i == 0)
             {
                 await GameObject.Find("Panto").GetComponent<LowerHandle>().SwitchTo(enemy);

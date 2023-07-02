@@ -20,6 +20,9 @@ public class PlayerController : MonoBehaviour
     private SpeechOut speechOut;
     private bool movementFrozen;
     private UpperHandle upperHandle;
+    
+    private PlayerSoundEffect soundEffects;
+    private bool playerFellDown;
 
     async void Start()
     {
@@ -28,7 +31,24 @@ public class PlayerController : MonoBehaviour
         speech = new SpeechIn(onSpeechRecognized);
         speech.StartListening(new string[]{"help", "resume"});
         speechOut = new SpeechOut();
+
+        soundEffects = GetComponent<PlayerSoundEffect>();
     }
+    
+    void Update()
+    {
+        
+        if (transform.position.x*transform.position.x + transform.position.z*transform.position.z > 14.5*14.5f && !playerFellDown)
+        {
+            playerFellDown = true;
+            float clipTime = soundEffects.PlayerFellDown();
+            Destroy(gameObject, clipTime);
+        }
+
+        if(!GameObject.FindObjectOfType<SpawnManager>().gameStarted) return;
+        powerupIndicator.transform.position = transform.position + new Vector3(0f, -0.5f, 0f);
+    }
+    
     void FixedUpdate()
     {
         if (!GameObject.FindObjectOfType<SpawnManager>().gameStarted) return;
@@ -83,11 +103,7 @@ public class PlayerController : MonoBehaviour
         upperHandle.FreeRotation();
     }
 
-    void Update()
-    {
-        if(!GameObject.FindObjectOfType<SpawnManager>().gameStarted) return;
-        powerupIndicator.transform.position = transform.position + new Vector3(0f, -0.5f, 0f);
-    }
+
 
     async void OnTriggerEnter(Collider other)
     {
@@ -106,10 +122,17 @@ public class PlayerController : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         GameObject other = collision.gameObject;
+        
+        
         /// challenge: when collision has tag "Enemy" and we have a powerup
         /// get the enemyRigidbody and push the enemy away from the player
         if (other.CompareTag("Enemy"))
         {
+            soundEffects.PlayHit();
+            
+            Enemy enemy = other.GetComponent<Enemy>();
+            soundEffects.PlayEnemyHitClip(enemy.nameClip, other);
+ 
             Rigidbody enemyRigidbody = other.GetComponent<Rigidbody>();
             Vector3 awayFromPlayer = other.transform.position - transform.position;
             Vector3 scaledDirection = awayFromPlayer.normalized * powerupStrength * 0.4f;
