@@ -13,7 +13,7 @@ public class PlayerSoundEffect : MonoBehaviour
 
     void Start()
     {
-        // audioSource = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
         // speechOut = new SpeechOut();
     }
     public float PlayerFellDown()
@@ -52,6 +52,9 @@ public class PlayerSoundEffect : MonoBehaviour
         // BIS TODO: uncomment
         // Enemy enemy = go.GetComponent<Enemy>(); 
         // speechOut.Speak("I was hit by: " + enemy.displayName);
+        
+        // BIS TODO: uncomment
+        // SayName(go.GetComponent<Enemy>());
 
 
     }
@@ -70,6 +73,15 @@ public class PlayerSoundEffect : MonoBehaviour
     //     }
     //     SayName(go.GetComponent<Enemy>());
     // }
+    
+    private async void SayName(Enemy e)
+    {
+  // BIS TODO: uncomment
+      speechOut.Stop();
+      await speechOut.Speak("I was hit by");
+      await speechOut.Speak(e.displayName);
+
+    }
     
     public void StopPlayback()
     {

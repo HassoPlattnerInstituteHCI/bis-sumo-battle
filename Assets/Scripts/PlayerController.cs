@@ -38,8 +38,7 @@ public class PlayerController : MonoBehaviour
         speechIn.StartListening(new string[]{"help", "resume"});
         speechOut = new SpeechOut();
         
-        // BIS TODO: uncomment
-        // soundEffects = GetComponent<PlayerSoundEffect>();
+        soundEffects = GetComponent<PlayerSoundEffect>();
         
         // BIS TODO: uncomment
         // PowerUpListener();
